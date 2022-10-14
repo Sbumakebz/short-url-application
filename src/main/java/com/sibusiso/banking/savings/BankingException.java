@@ -1,4 +1,4 @@
-package com.sibusiso.banking.account.savings;
+package com.sibusiso.banking.savings;
 
 public class BankingException extends Exception {
     public BankingException(String message) {

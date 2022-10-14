@@ -1,4 +1,4 @@
-package com.sibusiso.banking.account.savings;
+package com.sibusiso.banking.savings;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -12,14 +12,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableEurekaClient
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan(basePackages={"com.sibusiso.banking.account.savings"})
-@EnableJpaRepositories(basePackages="com.sibusiso.banking.account.savings")
+@ComponentScan(basePackages={"com.sibusiso.banking.savings"})
+@EnableJpaRepositories(basePackages="com.sibusiso.banking.savings")
 @EnableTransactionManagement
-@EntityScan(basePackages="com.sibusiso.banking.account.savings")
+@EntityScan(basePackages="com.sibusiso.banking.savings")
 public class SavingsAccountServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SavingsAccountServiceApplication.class, args);
 	}
+
 
 }
