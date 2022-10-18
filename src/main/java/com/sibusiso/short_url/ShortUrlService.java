@@ -31,7 +31,7 @@ public class ShortUrlService {
     ShortUrlRepository repository;
 
     //@Transactional
-    public String encode(String longURL) throws ResponseStatusException {
+    public ShortUrl encode(String longURL) throws ResponseStatusException {
         logger.debug("To encode: " + longURL);
 
         try {
@@ -43,6 +43,7 @@ public class ShortUrlService {
         }
 
         StringBuilder builder = new StringBuilder();
+        ShortUrlMapping url = null;
         List<ShortUrlMapping> shortUrlMappings = repository.getShortUrlMappingByLongUrl(longURL);
         if(shortUrlMappings == null || shortUrlMappings.isEmpty()) {
             //decode using base 62
@@ -51,7 +52,7 @@ public class ShortUrlService {
             int baseId = 0;
             baseId = repository.getLatestId();
             baseId++;
-            ShortUrlMapping url = new ShortUrlMapping(baseId, longURL);
+            url = new ShortUrlMapping(baseId, longURL);
             repository.save(url);
             while(baseId > 0) {
                 builder.append(characters.charAt((baseId % base)));
@@ -61,18 +62,19 @@ public class ShortUrlService {
             int base = characters.length();
 
             int baseId = 0;
-            baseId = shortUrlMappings.get(0).getId();
+            url = shortUrlMappings.get(0);
+            baseId = url.getId();
 
             while(baseId > 0) {
                 builder.append(characters.charAt((baseId % base)));
                 baseId /= base;
             }
         }
-        return "short_url.com/" + builder.reverse();
+        return new ShortUrl(url.getId(), "short_url.com/" + builder.reverse());
     }
 
     //@Transactional
-    public synchronized String decode(String shortURL) throws ResponseStatusException {
+    public synchronized LongUrl decode(String shortURL) throws ResponseStatusException {
         logger.debug("To decode: " + shortURL);
 
         shortURL = shortURL.substring(shortURL.lastIndexOf("~") + 1);//recall '/' is replaced by '~' on request
@@ -90,7 +92,8 @@ public class ShortUrlService {
 
         logger.debug("unknownBaseId: " + unknownBaseId);
         Optional<ShortUrlMapping> url = repository.findById(unknownBaseId);
-        return url.isPresent() ? url.get().getLongUrl() : "Short Url could not be decoded.";
+        return url.isPresent() ? new LongUrl(url.get().getId(), url.get().getLongUrl()) :
+                new LongUrl(-1, "Short Url could not be decoded.");
     }
 }
 
