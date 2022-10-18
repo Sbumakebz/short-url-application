@@ -8,20 +8,16 @@
 		<version>2.7.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.sibusiso.banking.account.savings</groupId>
-	<artifactId>savings-account-service-client</artifactId>
+	<groupId>com.sibusiso.short_url</groupId>
+	<artifactId>short-url-application</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Savings Account Service</name>
-	<description>Demo for Savings Account Service</description>
+	<name>Short Url Application</name>
+	<description>Short Url Application Demo</description>
 	<properties>
 		<java.version>11</java.version>
 		<spring-cloud.version>2021.0.4</spring-cloud.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -48,6 +44,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>2.7.3</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

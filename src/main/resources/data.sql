@@ -1,4 +1,2 @@
-INSERT INTO savings_account (account_number, amount) VALUES ('123456789', 500.0);
-INSERT INTO savings_account (account_number, amount) VALUES ('437163690', 600.0);
-INSERT INTO savings_account (account_number, amount) VALUES ('598643654', 700.0);
+INSERT INTO short_url_mapping (id, long_url) VALUES (10000000, 'www.default_url.com');
 

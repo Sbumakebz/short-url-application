@@ -1,0 +1,5 @@
+com\sibusiso\short_url\ShortUrlController.class
+com\sibusiso\short_url\ShortUrlService.class
+com\sibusiso\short_url\ShortUrlApplication.class
+com\sibusiso\short_url\ShortUrlRepository.class
+com\sibusiso\short_url\ShortUrlMapping.class
