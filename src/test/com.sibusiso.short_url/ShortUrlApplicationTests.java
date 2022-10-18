@@ -17,7 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = ShortUrlController.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
 class ShortUrlApplicationTests {
+    @Autowired
     private WebClient webClient;
 
     @Test
