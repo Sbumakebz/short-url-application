@@ -31,7 +31,7 @@ public class ShortUrlService {
     ShortUrlRepository repository;
 
     //@Transactional
-    public ShortUrl encode(String longURL) throws ResponseStatusException {
+    public synchronized ShortUrl encode(String longURL) throws ResponseStatusException {
         logger.debug("To encode: " + longURL);
 
         try {
