@@ -22,23 +22,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ShortUrlApplicationTests {
     @Autowired
     private WebClient webClient;
+    private String longURL;
+    private String shortURL;
+    
+    @BeforeAll
+    public void setLongURL() {
+        longURL  = "http:~~google.com";//assume url
+        webClient = WebClient.create("http://localhost:8083/short-url");
+    }
 
     @Test
     @Order(1)
     void testEncodeURL() {
-        String longURL = "https://github.com/Sbumakebz/short-url-application";
         String message = webClient.get().uri("/encode/{longURL}", longURL)
                 .retrieve().bodyToMono(ResponseEntity<ShortUrl>.class).block();
-        Assert.isTrue(message.startsWith("short_url.com/"), "Passed URL encoding for: " + longURL);
+        ObjectMapper objectMapper = new ObjectMapper();
+        // Deserialization into the 'ShortUrl' class
+        ShortUrl shortURLObject = objectMapper.readValue(message, ShortUrl.class);
+        shortURL = shortURLObject.getShortURL();
+        Assert.isTrue(shortURL.startsWith("short_url.com/"), "Passed URL encoding for: " + longURL);
 
         //test url format
-        String longURL = "httpsgithub.com:Sbumakebzshort-url-application";
+        String invalidLongURL = "httpsgithub.com-Sbumakebzshort-url-application";
         Exception exception = assertThrows(MalformedURLException.class, () -> {
-            webClient.get().uri("/encode/{longURL}", longURL)
+            webClient.get().uri("/encode/{longURL}", invalidLongURL)
                     .retrieve().bodyToMono(ResponseEntity<ShortUrl>.class).block();
         });
 
-        String expectedMessage = "Invalid Url: " + longURL;
+        String expectedMessage = "Invalid Url: " + invalidLongURL;
         String actualMessage = exception.getMessage();
 
         Assert.isTrue(actualMessage.equals(expectedMessage), "Passed Invalid URL test.");
@@ -47,17 +58,20 @@ class ShortUrlApplicationTests {
     @Test
     @Order(2)
     void testDecodeURL() {
-        String shortURL = "short_url.com/";//TODO get a short url example
         String message = webClient.get().uri("/decode/{shortURL}", shortURL)
                 .retrieve().bodyToMono(ResponseEntity<LongUrl>.class).block();
-        Assert.isTrue(message.startsWith("http://"), "Passed URL encoding for: " + shortURL);
+        ObjectMapper objectMapper = new ObjectMapper();
+        // Deserialization into the 'LongURL' class
+        LongURL longURLObject = objectMapper.readValue(message, LongURL.class);
+        Assert.isTrue(longURLObject.getLongURL().equals(longURL), "Passed URL decoding for: " + shortURL);
 
-        String shortURL = "httpsgithub.com:Sbumakebzshort-url-application";
-        String message = webClient.get().uri("/decode/{shortURL}", shortURL)
+        String invalidShortURL = "httpsgithub.com:Sbumakebzshort-url-application";//non existant url on DB
+        message = webClient.get().uri("/decode/{shortURL}", invalidShortURL)
                 .retrieve().bodyToMono(ResponseEntity<LongUrl>.class).block();
-
+        longURLObject = objectMapper.readValue(message, LongURL.class);
+     
         String expectedMessage = "Short Url could not be decoded.";
 
-        Assert.isTrue(message.equals(expectedMessage), "Passed Invalid short URL test.");
+        Assert.isTrue(longURLObject.getLongURL().equals(expectedMessage), "Passed Invalid short URL test.");
     }
 }
